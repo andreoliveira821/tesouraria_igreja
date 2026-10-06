@@ -1,0 +1,12 @@
+# Ignorar arquivos e dados locais/sensíveis
+dados/
+*.csv
+*.json
+
+# Ignorar ambientes virtuais do Python
+venv/
+.venv/
+__pycache__/
+
+# Ignorar arquivos do VS Code
+.vscode/
