@@ -1,0 +1,26 @@
+cookie:
+  expiry_days: 30
+  key: chave_secreta_para_cookie
+  name: sessao_ponto_cookie
+credentials:
+  usernames:
+    Maria Rita:
+      email: ritleao34@gmail.com
+      name: "Maria Rita de Cassia da Silva Le\xE3o"
+      password: $2b$12$RFJwNfC0qQq8vo0VEc1peO98.a8hmxr/FfaHBUDxdb6/s4bkM8fZa
+    admin:
+      email: andrejunior821@gmail.com
+      name: Administrador
+      password: $2b$12$yO8iKTjgfmYDa.5m.DPRx.qwIxCzap9LAHpqSiM5N7i.gjC6TdQui
+    "andr\xE9":
+      email: andrejunior821@gmail.com
+      name: "Carlos Andr\xE9 da Silva Oliveira Junior"
+      password: $2b$12$hen1.3J86Iw.FueOnd0VoerQ43imPedYuxQLCO3bJMC1wNDreZxva
+    maria rita:
+      email: ritleao34@gmail.com
+      name: "Maria Rita de Cassia da Silva Le\xE3o"
+      password: $2b$12$yO8iKTjgfmYDa.5m.DPRx.qwIxCzap9LAHpqSiM5N7i.gjC6TdQui
+    teste:
+      email: ritleao34@gmail.com
+      name: Teste
+      password: $2b$12$jd9iF5/S5rJKydtt5R/KounWr.0AIHUt9gJxRKVoVXZlM6UeDTTBi

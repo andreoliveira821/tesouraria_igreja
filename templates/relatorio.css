@@ -1,0 +1,68 @@
+@page { size: a4 landscape; margin: 0.75cm 0.8cm 0.7cm 0.8cm; }
+* { font-family: Arial, Helvetica, sans-serif; }
+body { color: #20334b; font-size: 7.2pt; margin: 0; padding: 0; }
+.capa-faixa { background-color: #0b2b50; color: #ffffff; padding: 10px 13px 9px 13px; border-bottom: 3px solid #d9a63a; }
+.topo-layout { width: 100%; border-collapse: collapse; margin: 0; }
+.topo-layout td { border: none; background: transparent; padding: 0; }
+.marca { width: 78%; color: #ffffff; }
+.simbolo { display: inline-block; width: 31px; color: #e4b84e; font-size: 25pt; font-weight: bold; vertical-align: middle; text-align: center; }
+.igreja-label { color: #dce8f5; font-size: 7pt; letter-spacing: 2px; font-weight: bold; }
+.titulo-principal { color: #ffffff; font-size: 18pt; font-weight: bold; letter-spacing: 0.5px; margin-top: 1px; }
+.subtitulo { color: #d7e3ef; font-size: 7.5pt; margin-top: 3px; }
+.ano-box { width: 22%; text-align: right; border-left: 1px solid #47627d !important; padding-left: 12px !important; }
+.ano-label { color: #e4b84e; font-size: 7pt; font-weight: bold; letter-spacing: 1px; }
+.ano-numero { color: #ffffff; font-size: 23pt; font-weight: bold; }
+.ano-legenda { color: #d7e3ef; font-size: 7pt; }
+.nome-igreja { color: #0b2b50; font-size: 12pt; font-weight: bold; margin: 9px 1px 2px 1px; }
+.linha-intro { color: #65758a; font-size: 7pt; border-bottom: 1px solid #d9e2ec; padding: 0 1px 6px 1px; }
+.linha-intro span { color: #d6a332; font-size: 9pt; padding: 0 3px; }
+.kpi-table { width: 100%; border-collapse: separate; border-spacing: 5px 0; margin: 9px -5px 12px -5px; }
+.kpi-table td { width: 25%; padding: 0; border: none; background: transparent; }
+.kpi-card { padding: 8px 9px 7px 9px; border: 1px solid #dce5ef; border-left: 4px solid #1d69a6; background-color: #f6f9fc; }
+.receita-card { border-left-color: #2475b9; }
+.despesa-card { border-left-color: #d95555; }
+.saldo-card { border-left-color: #19976c; }
+.diz-card { border-left-color: #d6a332; }
+.kpi-label { color: #65758a; font-size: 6.2pt; font-weight: bold; letter-spacing: 0.5px; }
+.kpi-valor { color: #0b2b50; font-size: 13pt; font-weight: bold; margin-top: 4px; }
+.despesa-card .kpi-valor { color: #b93c43; }
+.saldo-card .kpi-valor { color: #12815d; }
+.kpi-nota { color: #6d7b8c; font-size: 6pt; margin-top: 3px; }
+.section-heading { width: 100%; background-color: #edf3f9; border-left: 4px solid #d9a63a; padding: 6px 8px; margin: 10px 0 6px 0; }
+.section-num { display: inline-block; background-color: #0b2b50; color: #ffffff; font-size: 10pt; font-weight: bold; padding: 4px 7px; margin-right: 7px; vertical-align: middle; }
+.section-title { display: inline; color: #0b2b50; font-size: 10pt; font-weight: bold; }
+.section-desc { color: #65758a; font-size: 6.8pt; margin-top: 2px; }
+.chart-panel { border: 1px solid #dce5ef; background-color: #ffffff; padding: 4px 6px; margin-bottom: 7px; }
+.chart-panel img { width: 100%; height: auto; }
+.table-heading { background-color: #0b2b50; color: #ffffff; font-size: 6.5pt; font-weight: bold; letter-spacing: 0.6px; padding: 5px 7px; }
+table.dados-table { width: 100%; border-collapse: collapse; margin: 0 0 8px 0; }
+.dados-table th { background-color: #123d68; color: #ffffff; font-size: 6.2pt; border: 1px solid #31577b; padding: 5px 2px; text-align: center; }
+.dados-table td { color: #24384e; font-size: 6.2pt; border: 1px solid #d8e2ec; padding: 4px 2px; text-align: right; }
+.dados-table td:first-child { text-align: left; font-weight: bold; background-color: #f3f6fa; }
+.dados-table tbody tr:nth-child(even) td { background-color: #f7f9fc; }
+.dados-table .col-label { width: 14%; }
+.dados-table .col-total { width: 9%; }
+.dados-table tr.receitas td { color: #176da5; }
+.dados-table tr.despesas td { color: #b94348; }
+.dados-table tr.saldo td { background-color: #e0f3eb; color: #086b4b; font-weight: bold; }
+.dados-table tr.saldo td:first-child { background-color: #c9e9dc; }
+.dados-table tr td strong { font-weight: bold; }
+.nota-rodape, .dizimista-nota { color: #66778a; font-size: 6.2pt; padding: 5px 7px; background-color: #f3f6fa; border-left: 2px solid #d9a63a; margin-top: 4px; }
+.page-break { page-break-before: always; }
+.cabeçalho-pagina { width: 100%; border-bottom: 2px solid #d9a63a; padding: 0 0 6px 0; margin-bottom: 8px; }
+.mini-marca { display: inline-block; color: #d6a332; font-size: 17pt; font-weight: bold; width: 25px; vertical-align: middle; }
+.mini-titulo { color: #0b2b50; font-size: 9pt; font-weight: bold; }
+.mini-subtitulo { color: #65758a; font-size: 6.5pt; }
+.pagina-tag { color: #0b2b50; font-size: 7pt; font-weight: bold; text-align: right; }
+.dre-intro { width: 100%; margin-bottom: 6px; }
+.dre-grafico { width: 30%; display: inline-block; vertical-align: middle; }
+.dre-grafico img { width: 100%; height: auto; }
+.dre-explicacao { width: 67%; display: inline-block; vertical-align: middle; background-color: #f4f7fb; border: 1px solid #dce5ef; padding: 8px; color: #53667b; font-size: 7pt; }
+.dre-explicacao strong { color: #0b2b50; font-size: 8pt; }
+.dre-explicacao p { margin: 4px 0 0 0; }
+.section-diz { margin-top: 10px; }
+.mensagem-final { background-color: #0b2b50; color: #ffffff; text-align: center; padding: 9px; margin-top: 11px; border-bottom: 3px solid #d9a63a; }
+.mensagem-titulo { color: #e4b84e; font-size: 7pt; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; }
+.mensagem-final div:last-child { font-size: 8pt; font-style: italic; }
+.mensagem-final span { color: #e4b84e; font-size: 7pt; }
+.footer { text-align: center; color: #7a8998; font-size: 6pt; margin-top: 5px; }
