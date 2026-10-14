@@ -11,7 +11,7 @@ credentials:
     admin:
       email: andrejunior821@gmail.com
       name: Administrador
-      password: $2b$12$yO8iKTjgfmYDa.5m.DPRx.qwIxCzap9LAHpqSiM5N7i.gjC6TdQui
+      password: $2b$12$8WvoDVf9Gl9tNRT44Iid9O9mMn9btYt2SL0zj3RzZLmHllPWU1NfC
     "andr\xE9":
       email: andrejunior821@gmail.com
       name: "Carlos Andr\xE9 da Silva Oliveira Junior"
