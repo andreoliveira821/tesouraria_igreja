@@ -193,49 +193,58 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
     def fmt(v):
         return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
-    meses = list(df_fc_matrix.columns)
-    cabecalho_meses = "".join([f"<th>{m}</th>" for m in meses])
+    meses_nomes_completos = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    meses_siglas = list(df_fc_matrix.columns)
 
-    # 1. Linhas da Tabela 1: Fluxo de Caixa
-    linhas_fc = ""
-    for idx_nome, label in [('Receitas', 'Receitas'), ('Despesas', 'Despesas'), ('Saldo', 'Saldo do Mês')]:
-        valores_td = "".join([f"<td>{fmt(df_fc_matrix.loc[idx_nome, m])}</td>" for m in meses])
-        total_lin = fmt(df_fc_matrix.loc[idx_nome].sum())
-        cor_classe = "saldo" if idx_nome == 'Saldo' else idx_nome.lower()
-        linhas_fc += f"<tr class='{cor_classe}'><td><strong>{label}</strong></td>{valores_td}<td><strong>{total_lin}</strong></td></tr>"
+    # Totais Globais
+    tot_rec = df_fc_matrix.loc['Receitas'].sum()
+    tot_desp = df_fc_matrix.loc['Despesas'].sum()
+    tot_sld = df_fc_matrix.loc['Saldo'].sum()
 
-    # 2. Linhas da Tabela 2: DRE
-    linhas_dre = ""
+    # 1. Linhas Tabela Mês a Mês (Fluxo de Caixa)
+    linhas_fc_detalhada = ""
+    for idx, sigla in enumerate(meses_siglas):
+        m_nome = meses_nomes_completos[idx]
+        r = df_fc_matrix.loc['Receitas', sigla]
+        d = df_fc_matrix.loc['Despesas', sigla]
+        s = df_fc_matrix.loc['Saldo', sigla]
+        linhas_fc_detalhada += f"<tr><td>{m_nome}</td><td>{fmt(r)}</td><td>{fmt(d)}</td><td><strong>{fmt(s)}</strong></td></tr>"
+    
+    # Linha Total Ano
+    linhas_fc_detalhada += f"<tr class='total-row'><td>TOTAL DO ANO</td><td>{fmt(tot_rec)}</td><td>{fmt(tot_desp)}</td><td>{fmt(tot_sld)}</td></tr>"
+
+    # 2. Linhas DRE Executivo
+    linhas_dre_executivo = f"<tr class='total-row'><td>RECEITAS TOTAIS</td><td style='text-align: right;'>{fmt(tot_rec)}</td></tr>"
     for cat in dre_matriz.index:
-        valores_td = "".join([f"<td>{fmt(dre_matriz.loc[cat, m])}</td>" for m in meses])
-        total_cat = fmt(dre_matriz.loc[cat, 'Total'])
-        linhas_dre += f"<tr><td>{cat}</td>{valores_td}<td><strong>{total_cat}</strong></td></tr>"
+        val_cat = dre_matriz.loc[cat, 'Total']
+        linhas_dre_executivo += f"<tr><td style='padding-left: 12px;'>• {cat}</td><td style='text-align: right;'>{fmt(val_cat)}</td></tr>"
+    
+    linhas_dre_executivo += f"<tr class='despesa-row'><td>DESPESAS TOTAIS</td><td style='text-align: right;'>{fmt(tot_desp)}</td></tr>"
+    for cat in config.get("categorias_saida", []):
+        # Soma a categoria nas despesas se existir na matriz
+        val_sai = dre_matriz.loc[cat, 'Total'] if cat in dre_matriz.index else 0.0
+        if val_sai > 0:
+            linhas_dre_executivo += f"<tr><td style='padding-left: 12px;'>• {cat}</td><td style='text-align: right;'>{fmt(val_sai)}</td></tr>"
 
-    # 3. Linhas da Tabela 3: Dizimistas
-    linhas_diz = ""
+    linhas_dre_executivo += f"<tr class='superavit-row'><td>SUPERÁVIT / DÉFICIT LÍQUIDO</td><td style='text-align: right;'>{fmt(tot_sld)}</td></tr>"
+
+    # 3. Linhas Dizimistas Executivo
+    linhas_diz_executivo = ""
     for label in ['Dizimistas Identificados', 'Dízimos Anônimos']:
-        valores_td = "".join([f"<td>{int(df_diz_exibir.loc[label, m])}</td>" for m in meses])
         total_diz = int(df_diz_exibir.loc[label, 'Total Anual'])
-        linhas_diz += f"<tr><td>{label}</td>{valores_td}<td><strong>{total_diz}</strong></td></tr>"
+        linhas_diz_executivo += f"<tr><td>{label}</td><td style='text-align: right;'><strong>{total_diz}</strong></td></tr>"
 
+    # --- CONVERSÃO DO GRÁFICO PLOTLY ---
     # --- CONVERSÃO DOS GRÁFICOS PLOTLY EM IMAGEM BASE64 ---
     img_evolucao_html = ""
     if fig_evolucao is not None:
         try:
-            img_bytes = fig_evolucao.to_image(format="png", width=1000, height=280)
+            img_bytes = fig_evolucao.to_image(format="png", width=650, height=180)
             b64_str = base64.b64encode(img_bytes).decode('utf-8')
-            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 10px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; max-height: 220px;" /></div>'
-        except Exception:
-            img_evolucao_html = ""
-
-    img_dre_html = ""
-    if fig_dre_pie is not None:
-        try:
-            img_bytes_dre = fig_dre_pie.to_image(format="png", width=450, height=250)
-            b64_str_dre = base64.b64encode(img_bytes_dre).decode('utf-8')
-            img_dre_html = f'<img src="data:image/png;base64,{b64_str_dre}" style="width: 100%; max-height: 180px;" />'
-        except Exception:
-            img_dre_html = ""
+            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 6px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; max-height: 140px;" /></div>'
+        except Exception as e:
+            img_evolucao_html = f"<!-- Erro ao gerar imagem do gráfico: {e} -->"
 
     # Leitura dos arquivos de template
     caminho_css = os.path.join("templates", "relatorio.css")
@@ -252,13 +261,14 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
         estilo_css=estilo_css,
         nome_igreja=nome_igreja,
         ano_sel=ano_sel,
-        cabecalho_meses=cabecalho_meses,
-        linhas_fc=linhas_fc,
-        linhas_dre=linhas_dre,
-        linhas_diz=linhas_diz,
+        total_receitas=fmt(tot_rec),
+        total_despesas=fmt(tot_desp),
+        total_saldo=fmt(tot_sld),
         img_evolucao_html=img_evolucao_html,
-        img_dre_html=img_dre_html,
-        observacoes_gerais=observacoes_gerais,
+        linhas_fc_detalhada=linhas_fc_detalhada,
+        linhas_dre_executivo=linhas_dre_executivo,
+        linhas_diz_executivo=linhas_diz_executivo,
+        observacoes_gerais=observacoes_gerais if observacoes_gerais else "Nenhuma observação registrada para este exercício.",
         data_geracao=datetime.now().strftime('%d/%m/%Y às %H:%M')
     )
 
@@ -267,6 +277,7 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
     return pdf_buffer.getvalue()
 
 # --- FUNÇÕES DE BANCO DE DADOS (SUPABASE) ---
+@st.cache_data(ttl=600)
 def carregar_dados():
     try:
         response = supabase.table("lancamentos").select("*").execute()
@@ -853,7 +864,8 @@ elif opcao_sidebar == "Visualizar Dashboards":
 
         df_fc_matrix = pd.DataFrame(dados_fc)
 
-        # 1. Gráfico de Linha / Evolução do Fluxo
+        
+        # 1. Gráfico Combinado: Barras (Receitas/Despesas) e Linha Suavizada (Saldo)
         st.subheader("1. Fluxo de Caixa (Evolução Anual)")
         df_chart_anual = pd.DataFrame({
             'Mês': meses_siglas,
@@ -861,9 +873,62 @@ elif opcao_sidebar == "Visualizar Dashboards":
             'Despesas': [dados_fc[m]['Despesas'] for m in meses_siglas],
             'Saldo': [dados_fc[m]['Saldo'] for m in meses_siglas]
         })
-        fig_evolucao = px.line(df_chart_anual, x='Mês', y=['Receitas', 'Despesas', 'Saldo'], 
-                               markers=True, color_discrete_sequence=['#2ecc71', '#e74c3c', '#3498db'])
-        fig_evolucao.update_layout(height=300, margin=dict(l=20, r=20, t=20, b=20))
+        
+        fig_evolucao = go.Figure()
+
+        # Adiciona barras para Receitas
+        fig_evolucao.add_trace(go.Bar(
+            x=df_chart_anual['Mês'], 
+            y=df_chart_anual['Receitas'], 
+            name='Receitas', 
+            marker_color='#2ecc71'
+        ))
+
+        # Adiciona barras para Despesas
+        fig_evolucao.add_trace(go.Bar(
+            x=df_chart_anual['Mês'], 
+            y=df_chart_anual['Despesas'], 
+            name='Despesas', 
+            marker_color='#e74c3c'
+        ))
+
+        # Adiciona linha suavizada para o Saldo (com spline)
+        fig_evolucao.add_trace(go.Scatter(
+            x=df_chart_anual['Mês'], 
+            y=df_chart_anual['Saldo'], 
+            name='Saldo', 
+            mode='lines+markers',
+            line=dict(shape='spline', color='#3498db', width=3),
+            marker=dict(size=6)
+        ))
+
+        # Configuração do layout limpo e legenda horizontal no topo
+        fig_evolucao.update_layout(
+            barmode='group',
+            height=220, 
+            margin=dict(l=30, r=20, t=35, b=10),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.05,
+                xanchor="center",
+                x=0.5,
+                title=None
+            ),
+            xaxis_title=None,
+            yaxis_title=None,
+            plot_bgcolor='rgba(0,0,0,0)',  # Fundo interno transparente
+            paper_bgcolor='rgba(0,0,0,0)', # Fundo externo transparente
+            xaxis=dict(
+                showgrid=True, 
+                gridcolor='rgba(128, 128, 128, 0.2)' # Grelha subtil adaptável
+            ),
+            yaxis=dict(
+                showgrid=True, 
+                gridcolor='rgba(128, 128, 128, 0.2)'
+            )
+        )
+        # Desenha o gráfico combinado na interface do Streamlit
         st.plotly_chart(fig_evolucao, use_container_width=True)
 
         # Tabela 1: Fluxo de Caixa Matriz (12 Meses + Total)
@@ -907,7 +972,6 @@ elif opcao_sidebar == "Visualizar Dashboards":
 
         st.dataframe(df_diz_exibir, use_container_width=True)
 
-        # Gerar o arquivo PDF usando os templates HTML/CSS
         # Buscar anotações do ano para consolidar no relatório
         observacoes_texto = ""
         try:
@@ -939,7 +1003,7 @@ elif opcao_sidebar == "Visualizar Dashboards":
 
         st.markdown("---")
         st.download_button(
-            label="📄 Baixar Relatório Completo em PDF (A4 Landscape)",
+            label="📄 Baixar Relatório Completo em PDF",
             data=pdf_bytes,
             file_name=f"relatorio_financeiro_{ano_sel}.pdf",
             mime="application/pdf",

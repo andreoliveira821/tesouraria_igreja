@@ -1,4 +1,8 @@
 streamlit
+streamlit-authenticator
 pandas
 plotly
+supabase
+xhtml2pdf
 ofxparse
+PyYAML

@@ -7,88 +7,103 @@
     </style>
 </head>
 <body>
-    <div class="topo-indice">
-        <p>RELATÓRIO DE IMPRESSÃO</p>
-        <p style="font-size: 10pt; color: #1e8449;">FLUXO DE CAIXA</p>
-        <p style="color: #555; margin-top: 5px;">
-            1. Fluxo de Caixa<br>
-            2. DRE (Demonstrativo de Resultado do Exercício)<br>
-            3. Resumo de Dizimistas<br>
-            4. Observações e Eventualidades do Exercício
-        </p>
-    </div>
 
-    <div class="header">
-        <h3>{nome_igreja}</h3>
-        <h1>RELATÓRIO DE CAIXA — EXERCÍCIO {ano_sel}</h1>
-    </div>
-
-    <!-- SEÇÃO 1: FLUXO DE CAIXA -->
-    <div class="secao-titulo">1. Fluxo de Caixa</div>
-    
-    {img_evolucao_html}
-
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 16%;">Fluxo de Caixa</th>
-                {cabecalho_meses}
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {linhas_fc}
-        </tbody>
-    </table>
-
-    <!-- SEÇÃO 2: DRE -->
-    <div class="secao-titulo">2. DRE (Demonstrativo de Resultado do Exercício)</div>
-    
-    <table style="border: none; margin-bottom: 5px; width: 100%;">
-        <tr style="border: none; background: transparent;">
-            <td style="width: 22%; border: none; vertical-align: middle; text-align: center; background: transparent; padding: 0;">
-                {img_dre_html}
+    <!-- CABEÇALHO EXECUTIVO -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 50%; border: none; background: transparent; padding: 0;">
+                <div class="header-title">
+                    <h1>{nome_igreja}</h1>
+                    <p>Relatório Anual de Gestão Financeira e Transparência</p>
+                </div>
             </td>
-            <td style="width: 78%; border: none; padding-left: 8px; vertical-align: top; background: transparent; padding: 0;">
-                <table style="width: 100%; font-size: 6.5pt;">
-                    <thead>
-                        <tr>
-                            <th style="width: 18%;">DRE</th>
-                            {cabecalho_meses}
-                            <th style="width: 6%;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {linhas_dre}
-                    </tbody>
-                </table>
+            <td style="width: 38%; border: none; background: transparent; padding: 0;">
+                <div class="header-verse">
+                    "Cada um dê conforme determinou em seu coração, não com pesar nem por obrigação..." <strong>2 Cor. 9:7</strong>
+                </div>
+            </td>
+            <td style="width: 12%; border: none; background: transparent; padding: 0; text-align: right; vertical-align: middle;">
+                <div class="ano-tag">{ano_sel}</div>
             </td>
         </tr>
     </table>
 
-    <!-- SEÇÃO 3: DIZIMISTAS -->
-    <div class="secao-titulo">3. Resumo e Estatísticas de Dizimistas</div>
-    <table>
+    <!-- SEÇÃO 1: FLUXO DE CAIXA -->
+    <div class="secao-titulo">1. Fluxo de Caixa & Evolução Mensal</div>
+    
+    <!-- CARDS DE RESUMO -->
+    <table class="kpi-table">
+        <tr>
+            <td class="kpi-card" style="border-top-color: #38a169;">
+                <div class="kpi-title">Receitas Totais</div>
+                <div class="kpi-value" style="color: #276749;">{total_receitas}</div>
+            </td>
+            <td class="kpi-card" style="border-top-color: #e53e3e;">
+                <div class="kpi-title">Despesas Totais</div>
+                <div class="kpi-value" style="color: #9b2c2c;">{total_despesas}</div>
+            </td>
+            <td class="kpi-card" style="border-top-color: #3182ce;">
+                <div class="kpi-title">Saldo do Ano</div>
+                <div class="kpi-value" style="color: #2b6cb0;">{total_saldo}</div>
+            </td>
+        </tr>
+    </table>
+
+    {img_evolucao_html}
+
+    <!-- TABELA MÊS A MÊS -->
+    <table class="data-table">
         <thead>
             <tr>
-                <th style="width: 16%;">Indicador</th>
-                {cabecalho_meses}
-                <th>Total</th>
+                <th style="width: 25%;">Mês</th>
+                <th>Receitas</th>
+                <th>Despesas</th>
+                <th>Saldo</th>
             </tr>
         </thead>
         <tbody>
-            {linhas_diz}
+            {linhas_fc_detalhada}
         </tbody>
     </table>
 
-    <!-- SEÇÃO 4: OBSERVAÇÕES E EVENTUALIDADES -->
-    <div class="secao-titulo">4. Observações e Eventualidades do Exercício</div>
-    <div style="border: 1px solid #d5dbdb; padding: 8px; min-height: 40px; font-size: 7.5pt; background-color: #fdfefe; margin-bottom: 10px;">
+    <!-- SEÇÃO 2: DRE -->
+    <div class="secao-titulo">2. DRE (Demonstrativo do Resultado)</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 70%;">Categoria</th>
+                <th style="text-align: right; width: 30%;">Valor (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {linhas_dre_executivo}
+        </tbody>
+    </table>
+
+    <!-- SEÇÃO 3: DIZIMISTAS -->
+    <div class="secao-titulo">3. Estatísticas de Dizimistas</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 70%;">Indicador</th>
+                <th style="text-align: right; width: 30%;">Total Anual</th>
+            </tr>
+        </thead>
+        <tbody>
+            {linhas_diz_executivo}
+        </tbody>
+    </table>
+
+    <!-- SEÇÃO 4: OBSERVAÇÕES -->
+    <div class="secao-titulo">4. Observações e Eventualidades</div>
+    <div class="obs-box">
         {observacoes_gerais}
     </div>
 
+    <!-- RODAPÉ -->
     <div class="footer">
-        Gerado automaticamente pelo Sistema de Tesouraria — {data_geracao}
+        Juntos na obra de Deus! Relatório gerado automaticamente pelo Sistema de Tesouraria — {data_geracao}
     </div>
+
 </body>
 </html>
