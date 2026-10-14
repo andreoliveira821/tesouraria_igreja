@@ -240,9 +240,10 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
     img_evolucao_html = ""
     if fig_evolucao is not None:
         try:
-            img_bytes = fig_evolucao.to_image(format="png", width=650, height=180)
+            # Converte o gráfico do Plotly diretamente para bytes de imagem PNG
+            img_bytes = fig_evolucao.to_image(format="png", width=700, height=200)
             b64_str = base64.b64encode(img_bytes).decode('utf-8')
-            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 6px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; max-height: 140px;" /></div>'
+            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 10px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; max-height: 180px;" /></div>'
         except Exception as e:
             img_evolucao_html = f"<!-- Erro ao gerar imagem do gráfico: {e} -->"
 
@@ -996,10 +997,10 @@ elif opcao_sidebar == "Visualizar Dashboards":
             df_fc_matrix, 
             dre_matriz, 
             df_diz_exibir,
-            fig_evolucao=fig_evolucao,
+            fig_evolucao=fig_evolucao, # <--- Garanta que esta linha está incluída
             fig_dre_pie=fig_dre_pie,
             observacoes_gerais=observacoes_texto
-        )
+        ))
 
         st.markdown("---")
         st.download_button(
