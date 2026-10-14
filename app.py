@@ -1000,7 +1000,7 @@ elif opcao_sidebar == "Visualizar Dashboards":
             fig_evolucao=fig_evolucao, # <--- Garanta que esta linha está incluída
             fig_dre_pie=fig_dre_pie,
             observacoes_gerais=observacoes_texto
-        ))
+        )
 
         st.markdown("---")
         st.download_button(
