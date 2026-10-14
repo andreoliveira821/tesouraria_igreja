@@ -11,16 +11,12 @@ credentials:
     admin:
       email: andrejunior821@gmail.com
       name: Administrador
-      password: $2b$12$yO8iKTjgfmYDa.5m.DPRx.qwIxCzap9LAHpqSiM5N7i.gjC6TdQui
+      password: $2b$12$hAixckrfInkWVG3I8oAZo.bsknJcxGdbGNzdtaIbYsIdHDtSGDYm
     "andr\xE9":
       email: andrejunior821@gmail.com
       name: "Carlos Andr\xE9 da Silva Oliveira Junior"
       password: $2b$12$hen1.3J86Iw.FueOnd0VoerQ43imPedYuxQLCO3bJMC1wNDreZxva
-    maria rita:
-      email: ritleao34@gmail.com
-      name: "Maria Rita de Cassia da Silva Le\xE3o"
-      password: $2b$12$yO8iKTjgfmYDa.5m.DPRx.qwIxCzap9LAHpqSiM5N7i.gjC6TdQui
-    teste:
+    "teste":
       email: ritleao34@gmail.com
       name: Teste
       password: $2b$12$jd9iF5/S5rJKydtt5R/KounWr.0AIHUt9gJxRKVoVXZlM6UeDTTBi
