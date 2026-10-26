@@ -240,41 +240,53 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
         linhas_diz_executivo += f"<tr><td>{label}</td><td style='text-align: right;'><strong>{total_diz}</strong></td></tr>"
 
     # --- CONVERSÃO DO GRÁFICO PLOTLY ---
-    # --- CONVERSÃO DOS GRÁFICOS PLOTLY EM IMAGEM BASE64 ---
-    # --- CONVERSÃO DO GRÁFICO USANDO MATPLOTLIB (100% COMPATÍVEL COM NUVEM) ---
+   # --- CONVERSÃO DO GRÁFICO USANDO MATPLOTLIB COM LINHA SUAVIZADA ---
     img_evolucao_html = ""
     if df_fc_matrix is not None:
         try:
+            import numpy as np
+            from scipy.interpolate import make_interp_spline
+
             fig, ax = plt.subplots(figsize=(7, 2.2), dpi=150)
             meses_siglas_mat = list(df_fc_matrix.columns)
             receitas_vals = df_fc_matrix.loc['Receitas'].values
             despesas_vals = df_fc_matrix.loc['Despesas'].values
             saldo_vals = df_fc_matrix.loc['Saldo'].values
 
-            x = range(len(meses_siglas_mat))
+            x = np.arange(len(meses_siglas_mat))
             width = 0.35
 
-            # Desenha as barras e a linha de saldo
-            ax.bar([i - width/2 for i in x], receitas_vals, width, label='Receitas', color='#2ecc71')
-            ax.bar([i + width/2 for i in x], despesas_vals, width, label='Despesas', color='#e74c3c')
-            ax.plot(x, saldo_vals, color='#3498db', marker='o', linewidth=2, label='Saldo')
+            # Desenha as barras de Receitas e Despesas
+            ax.bar(x - width/2, receitas_vals, width, label='Receitas', color='#2ecc71')
+            ax.bar(x + width/2, despesas_vals, width, label='Despesas', color='#e74c3c')
 
-            ax.set_xticks(list(x))
+            # Linha de Saldo Suavizada (Spline)
+            if len(x) > 3 and np.max(np.abs(saldo_vals)) > 0:
+                try:
+                    X_spline = np.linspace(x.min(), x.max(), 300)
+                    spl = make_interp_spline(x, saldo_vals, k=3)
+                    Y_spline = spl(X_spline)
+                    ax.plot(X_spline, Y_spline, color='#3498db', linewidth=2.5, label='Saldo')
+                except Exception:
+                    ax.plot(x, saldo_vals, color='#3498db', marker='o', linewidth=2, label='Saldo')
+            else:
+                ax.plot(x, saldo_vals, color='#3498db', marker='o', linewidth=2, label='Saldo')
+
+            ax.set_xticks(x)
             ax.set_xticklabels(meses_siglas_mat, fontsize=8)
-            ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=3, fontsize=8, frameon=False)
+            ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=3, fontsize=8, frameon=False)
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
             ax.grid(True, linestyle='--', alpha=0.3)
             plt.tight_layout()
 
-            # Salva em memória RAM e converte para Base64
             buffer = io.BytesIO()
             plt.savefig(buffer, format='png', bbox_inches='tight', transparent=True)
             buffer.seek(0)
             b64_str = base64.b64encode(buffer.read()).decode('utf-8')
             plt.close(fig)
 
-            img_evolucao_html = f'<div style="text-align: center; margin: 10px auto; width: 100%;"><img src="data:image/png;base64,{b64_str}" style="width: 550px; height: 130px;" /></div>'
+            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 8px;"><img src="data:image/png;base64,{b64_str}" style="width: 550px; height: 130px;" /></div>'
         except Exception as e:
             img_evolucao_html = f"<!-- Erro Matplotlib PDF: {e} -->"
 

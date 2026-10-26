@@ -7,3 +7,5 @@ xhtml2pdf
 ofxparse
 PyYAML
 matplotlib
+scipy
+numpy
