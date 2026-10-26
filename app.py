@@ -240,7 +240,7 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
         linhas_diz_executivo += f"<tr><td>{label}</td><td style='text-align: right;'><strong>{total_diz}</strong></td></tr>"
 
     # --- CONVERSÃO DO GRÁFICO PLOTLY ---
-   # --- CONVERSÃO DO GRÁFICO USANDO MATPLOTLIB COM LINHA SUAVIZADA ---
+    # --- CONVERSÃO DO GRÁFICO USANDO MATPLOTLIB COM LINHA SUAVIZADA E RESPONSIVA ---
     img_evolucao_html = ""
     if df_fc_matrix is not None:
         try:
@@ -286,7 +286,8 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
             b64_str = base64.b64encode(buffer.read()).decode('utf-8')
             plt.close(fig)
 
-            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 8px;"><img src="data:image/png;base64,{b64_str}" style="width: 550px; height: 130px;" /></div>'
+            # Tag HTML fluida e responsiva para computadores e telemóveis
+            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 8px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; height: auto; max-width: 600px;" /></div>'
         except Exception as e:
             img_evolucao_html = f"<!-- Erro Matplotlib PDF: {e} -->"
 
