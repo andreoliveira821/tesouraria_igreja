@@ -6,4 +6,4 @@ supabase
 xhtml2pdf
 ofxparse
 PyYAML
-kaleido
+matplotlib
