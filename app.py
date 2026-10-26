@@ -287,7 +287,7 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
             plt.close(fig)
 
             # Tag HTML fluida e responsiva para computadores e telemóveis
-            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 8px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; height: auto; max-width: 600px;" /></div>'
+            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 8px;"><img src="data:image/png;base64,{b64_str}" width="550" height="130" style="width: 550px; height: 130px;" /></div>'
         except Exception as e:
             img_evolucao_html = f"<!-- Erro Matplotlib PDF: {e} -->"
 
