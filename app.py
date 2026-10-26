@@ -19,6 +19,10 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 # Configuração da página
 st.set_page_config(
     page_title="Tesouraria Igreja - Controle Financeiro",
@@ -237,15 +241,42 @@ def gerar_pdf_relatorio_html(nome_igreja, ano_sel, df_fc_matrix, dre_matriz, df_
 
     # --- CONVERSÃO DO GRÁFICO PLOTLY ---
     # --- CONVERSÃO DOS GRÁFICOS PLOTLY EM IMAGEM BASE64 ---
+    # --- CONVERSÃO DO GRÁFICO USANDO MATPLOTLIB (100% COMPATÍVEL COM NUVEM) ---
     img_evolucao_html = ""
-    if fig_evolucao is not None:
+    if df_fc_matrix is not None:
         try:
-            # Converte o gráfico do Plotly diretamente para bytes de imagem PNG
-            img_bytes = fig_evolucao.to_image(format="png", width=700, height=200)
-            b64_str = base64.b64encode(img_bytes).decode('utf-8')
-            img_evolucao_html = f'<div style="text-align: center; margin-bottom: 10px;"><img src="data:image/png;base64,{b64_str}" style="width: 100%; max-height: 180px;" /></div>'
+            fig, ax = plt.subplots(figsize=(7, 2.2), dpi=150)
+            meses_siglas_mat = list(df_fc_matrix.columns)
+            receitas_vals = df_fc_matrix.loc['Receitas'].values
+            despesas_vals = df_fc_matrix.loc['Despesas'].values
+            saldo_vals = df_fc_matrix.loc['Saldo'].values
+
+            x = range(len(meses_siglas_mat))
+            width = 0.35
+
+            # Desenha as barras e a linha de saldo
+            ax.bar([i - width/2 for i in x], receitas_vals, width, label='Receitas', color='#2ecc71')
+            ax.bar([i + width/2 for i in x], despesas_vals, width, label='Despesas', color='#e74c3c')
+            ax.plot(x, saldo_vals, color='#3498db', marker='o', linewidth=2, label='Saldo')
+
+            ax.set_xticks(list(x))
+            ax.set_xticklabels(meses_siglas_mat, fontsize=8)
+            ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=3, fontsize=8, frameon=False)
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            ax.grid(True, linestyle='--', alpha=0.3)
+            plt.tight_layout()
+
+            # Salva em memória RAM e converte para Base64
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png', bbox_inches='tight', transparent=True)
+            buffer.seek(0)
+            b64_str = base64.b64encode(buffer.read()).decode('utf-8')
+            plt.close(fig)
+
+            img_evolucao_html = f'<div style="text-align: center; margin: 10px auto; width: 100%;"><img src="data:image/png;base64,{b64_str}" style="width: 550px; height: 130px;" /></div>'
         except Exception as e:
-            img_evolucao_html = f"<!-- Erro ao gerar imagem do gráfico: {e} -->"
+            img_evolucao_html = f"<!-- Erro Matplotlib PDF: {e} -->"
 
     # Leitura dos arquivos de template
     caminho_css = os.path.join("templates", "relatorio.css")
